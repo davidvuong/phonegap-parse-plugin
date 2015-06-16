@@ -10,6 +10,7 @@ import org.json.JSONException;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.parse.SaveCallback;
+import com.parse.ParseException;
 import com.parse.PushService;
 
 public class ParsePlugin extends CordovaPlugin {
