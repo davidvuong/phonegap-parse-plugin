@@ -1,5 +1,8 @@
 package org.apache.cordova.core;
 
+import android.app.Application;
+import android.util.Log;
+
 import java.util.Set;
 
 import org.apache.cordova.CallbackContext;
@@ -9,17 +12,32 @@ import org.json.JSONException;
 
 import com.parse.Parse;
 import com.parse.ParseInstallation;
-import com.parse.SaveCallback;
-import com.parse.ParseException;
 import com.parse.PushService;
+import com.parse.ParseException;
+import com.parse.ParsePush;
+import com.parse.SaveCallback;
 
 public class ParsePlugin extends CordovaPlugin {
+    public static final String TAG = "ParsePlugin";
     public static final String ACTION_INITIALIZE = "initialize";
     public static final String ACTION_GET_INSTALLATION_ID = "getInstallationId";
     public static final String ACTION_GET_INSTALLATION_OBJECT_ID = "getInstallationObjectId";
     public static final String ACTION_GET_SUBSCRIPTIONS = "getSubscriptions";
     public static final String ACTION_SUBSCRIBE = "subscribe";
     public static final String ACTION_UNSUBSCRIBE = "unsubscribe";
+
+    public static void initializeParseWithApplication(Application app) {
+        String appId = getStringByKey(app, "parse_app_id");
+        String clientKey = getStringByKey(app, "parse_client_key");
+        Parse.enableLocalDatastore(app);
+        Log.d(TAG, "Initializing with parse_app_id: " + appId + " and parse_client_key:" + clientKey);
+        Parse.initialize(app, appId, clientKey);
+    }
+
+    private static String getStringByKey(Application app, String key) {
+        int resourceId = app.getResources().getIdentifier(key, "string", app.getPackageName());
+        return app.getString(resourceId);
+    }
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -54,20 +72,9 @@ public class ParsePlugin extends CordovaPlugin {
     private void initialize(final CallbackContext callbackContext, final JSONArray args) {
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
-                try {
-                    String appId = args.getString(0);
-                    String clientKey = args.getString(1);
-                    Parse.initialize(cordova.getActivity(), appId, clientKey);
-                    PushService.setDefaultPushCallback(cordova.getActivity(), cordova.getActivity().getClass());
-                    ParseInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            callbackContext.success();
-                        }
-                    });
-                } catch (JSONException e) {
-                    callbackContext.error("JSONException");
-                }
+            PushService.setDefaultPushCallback(cordova.getActivity(), cordova.getActivity().getClass());
+            ParseInstallation.getCurrentInstallation().saveInBackground();
+            callbackContext.success();
             }
         });
     }
@@ -102,7 +109,13 @@ public class ParsePlugin extends CordovaPlugin {
     private void subscribe(final String channel, final CallbackContext callbackContext) {
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
-                PushService.subscribe(cordova.getActivity(), channel, cordova.getActivity().getClass());
+                // PushService.subscribe(cordova.getActivity(), channel, cordova.getActivity().getClass());
+                ParsePush.subscribeInBackground(channel, new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        Log.i("PARSE_PUSH", "Added to "+channel+" Channel.");
+                    }
+                });
                 callbackContext.success();
             }
         });
@@ -111,11 +124,17 @@ public class ParsePlugin extends CordovaPlugin {
     private void unsubscribe(final String channel, final CallbackContext callbackContext) {
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
-                PushService.unsubscribe(cordova.getActivity(), channel);
+                ParsePush.unsubscribeInBackground(channel, new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        Log.i("PARSE_PUSH", "Removed from " + channel);
+                    }
+                });
                 callbackContext.success();
+                // PushService.unsubscribe(cordova.getActivity(), channel);
             }
         });
     }
-
+    
 }
 
