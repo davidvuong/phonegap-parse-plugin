@@ -113,10 +113,10 @@ public class ParsePlugin extends CordovaPlugin {
                 ParsePush.subscribeInBackground(channel, new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                        Log.i("PARSE_PUSH", "Added to "+channel+" Channel.");
+                        Log.i("PARSE_PUSH", "Added to " + channel + " Channel.");
+                        callbackContext.success();
                     }
                 });
-                callbackContext.success();
             }
         });
     }
@@ -128,9 +128,9 @@ public class ParsePlugin extends CordovaPlugin {
                     @Override
                     public void done(ParseException e) {
                         Log.i("PARSE_PUSH", "Removed from " + channel);
+                        callbackContext.success();
                     }
                 });
-                callbackContext.success();
                 // PushService.unsubscribe(cordova.getActivity(), channel);
             }
         });
