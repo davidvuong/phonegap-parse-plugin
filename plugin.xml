@@ -1,8 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
-<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
-           id="org.apache.cordova.core.parseplugin"
-      version="0.1.0">
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0" id="org.apache.cordova.core.parseplugin" version="0.1.0">
     <name>phonegap-parse-plugin</name>
     <description>phonegap parse plugin</description>
 
@@ -12,7 +10,7 @@
 
     <!-- android -->
     <platform name="android">
-        
+
         <!-- For Storing KEYS for PARSE Application -->
         <preference name="APP_ID" />
         <preference name="CLIENT_KEY" />
@@ -23,51 +21,50 @@
             </feature>
         </config-file>
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
-          <service android:name="com.parse.PushService" />
-          <receiver android:name="com.parse.ParseBroadcastReceiver">
-            <intent-filter>
-              <action android:name="android.intent.action.BOOT_COMPLETED" />
-              <action android:name="android.intent.action.USER_PRESENT" />
-            </intent-filter>
-          </receiver>
-          <receiver android:exported="false" android:name="com.parse.ParsePushBroadcastReceiver">
-            <intent-filter>
-                <action android:name="com.parse.push.intent.RECEIVE" />
-                <action android:name="com.parse.push.intent.DELETE" />
-                <action android:name="com.parse.push.intent.OPEN" />
-            </intent-filter>
-          </receiver>
-          <receiver android:name="com.parse.GcmBroadcastReceiver"
-              android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter>
-              <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-              <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-              <category android:name="$PACKAGE_NAME" />
-            </intent-filter>
-          </receiver>
+            <service android:name="com.parse.PushService" />
+            <receiver android:name="com.parse.ParseBroadcastReceiver">
+                <intent-filter>
+                    <action android:name="android.intent.action.BOOT_COMPLETED" />
+                    <action android:name="android.intent.action.USER_PRESENT" />
+                </intent-filter>
+            </receiver>
+            <receiver android:exported="false" android:name="com.parse.ParsePushBroadcastReceiver">
+                <intent-filter>
+                    <action android:name="com.parse.push.intent.RECEIVE" />
+                    <action android:name="com.parse.push.intent.DELETE" />
+                    <action android:name="com.parse.push.intent.OPEN" />
+                </intent-filter>
+            </receiver>
+            <receiver android:name="com.parse.GcmBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND">
+                <intent-filter>
+                    <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                    <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                    <category android:name="$PACKAGE_NAME" />
+                </intent-filter>
+            </receiver>
         </config-file>
         <config-file target="AndroidManifest.xml" parent="/manifest">
-          <uses-permission android:name="android.permission.INTERNET" />
-          <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-          <uses-permission android:name="android.permission.WAKE_LOCK" />
-          <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-          <uses-permission android:name="android.permission.VIBRATE" />
-          <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-          <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-          <permission android:protectionLevel="signature" android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" />
-          <uses-permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" />
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            <uses-permission android:name="android.permission.WAKE_LOCK" />
+            <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+            <uses-permission android:name="android.permission.VIBRATE" />
+            <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+            <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+            <permission android:protectionLevel="signature" android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" />
+            <uses-permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" />
         </config-file>
 
         <source-file src="src/android/parse/Parse-1.9.2.jar" target-dir="libs" framework="true" />
         <source-file src="src/android/parse/bolts-android-1.2.0.jar" target-dir="libs" framework="true" />
-        <source-file src="src/android/ParsePlugin.java" target-dir="src/org/apache/cordova/core" />      
+        <source-file src="src/android/ParsePlugin.java" target-dir="src/org/apache/cordova/core" />
 
         <source-file src="src/android/parseplugin.xml" target-dir="res/values" />
         <config-file target="res/values/parseplugin.xml" parent="/*">
             <string name="parse_app_id">$APP_ID</string>
             <string name="parse_client_key">$CLIENT_KEY</string>
         </config-file>
-     </platform>
+    </platform>
 
     <!-- ios -->
     <platform name="ios">
@@ -92,5 +89,6 @@
         <framework src="StoreKit.framework" />
         <framework src="SystemConfiguration.framework" />
         <framework src="src/ios/Frameworks/Parse.framework" custom="true" />
+        <framework src="src/ios/Frameworks/Bolts.framework" custom="true" />
     </platform>
 </plugin>
