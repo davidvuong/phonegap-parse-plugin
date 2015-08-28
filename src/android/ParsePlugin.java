@@ -41,30 +41,35 @@ public class ParsePlugin extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        if (action.equals(ACTION_INITIALIZE)) {
-            this.initialize(callbackContext, args);
-            return true;
-        }
-        if (action.equals(ACTION_GET_INSTALLATION_ID)) {
-            this.getInstallationId(callbackContext);
-            return true;
-        }
+        try{
+            if (action.equals(ACTION_INITIALIZE)) {
+                this.initialize(callbackContext, args);
+                return true;
+            }
+            if (action.equals(ACTION_GET_INSTALLATION_ID)) {
+                this.getInstallationId(callbackContext);
+                return true;
+            }
 
-        if (action.equals(ACTION_GET_INSTALLATION_OBJECT_ID)) {
-            this.getInstallationObjectId(callbackContext);
-            return true;
-        }
-        if (action.equals(ACTION_GET_SUBSCRIPTIONS)) {
-            this.getSubscriptions(callbackContext);
-            return true;
-        }
-        if (action.equals(ACTION_SUBSCRIBE)) {
-            this.subscribe(args.getString(0), callbackContext);
-            return true;
-        }
-        if (action.equals(ACTION_UNSUBSCRIBE)) {
-            this.unsubscribe(args.getString(0), callbackContext);
-            return true;
+            if (action.equals(ACTION_GET_INSTALLATION_OBJECT_ID)) {
+                this.getInstallationObjectId(callbackContext);
+                return true;
+            }
+            if (action.equals(ACTION_GET_SUBSCRIPTIONS)) {
+                this.getSubscriptions(callbackContext);
+                return true;
+            }
+            if (action.equals(ACTION_SUBSCRIBE)) {
+                this.subscribe(args.getString(0), callbackContext);
+                return true;
+            }
+            if (action.equals(ACTION_UNSUBSCRIBE)) {
+                this.unsubscribe(args.getString(0), callbackContext);
+                return true;
+            }
+        } catch (Exception e) {
+            Log.e("PARSE_PUSH", "Error while executing Parse API Functions.");
+            e.printStackTrace();
         }
         return false;
     }
@@ -72,9 +77,9 @@ public class ParsePlugin extends CordovaPlugin {
     private void initialize(final CallbackContext callbackContext, final JSONArray args) {
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
-            PushService.setDefaultPushCallback(cordova.getActivity(), cordova.getActivity().getClass());
-            ParseInstallation.getCurrentInstallation().saveInBackground();
-            callbackContext.success();
+                PushService.setDefaultPushCallback(cordova.getActivity(), cordova.getActivity().getClass());
+                ParseInstallation.getCurrentInstallation().saveInBackground();
+                callbackContext.success();
             }
         });
     }

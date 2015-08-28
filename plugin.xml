@@ -17,7 +17,7 @@
 
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="ParsePlugin">
-                <param name="android-package" value="org.apache.cordova.core.ParsePlugin" />
+                <param name="android-package" value="org.apache.cordova.core" />
             </feature>
         </config-file>
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
@@ -44,6 +44,7 @@
             </receiver>
         </config-file>
         <config-file target="AndroidManifest.xml" parent="/manifest">
+            <application android:name="org.apache.cordova.core.CordovaApp" />
             <uses-permission android:name="android.permission.INTERNET" />
             <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
             <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -55,9 +56,10 @@
             <uses-permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" />
         </config-file>
 
-        <source-file src="src/android/parse/Parse-1.9.2.jar" target-dir="libs" framework="true" />
-        <source-file src="src/android/parse/bolts-android-1.2.0.jar" target-dir="libs" framework="true" />
+        <source-file src="src/android/parse/Parse-1.10.1.jar" target-dir="libs" framework="true" />
+        <source-file src="src/android/parse/bolts-android-1.2.1.jar" target-dir="libs" framework="true" />
         <source-file src="src/android/ParsePlugin.java" target-dir="src/org/apache/cordova/core" />
+        <source-file src="src/android/CordovaApp.java" target-dir="src/org/apache/cordova/core" />
 
         <source-file src="src/android/parseplugin.xml" target-dir="res/values" />
         <config-file target="res/values/parseplugin.xml" parent="/*">
