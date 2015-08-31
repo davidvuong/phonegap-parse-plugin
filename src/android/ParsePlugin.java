@@ -3,6 +3,7 @@ package org.apache.cordova.core;
 import android.app.Application;
 import android.util.Log;
 
+import java.util.List;
 import java.util.Set;
 
 import org.apache.cordova.CallbackContext;
@@ -72,9 +73,10 @@ public class ParsePlugin extends CordovaPlugin {
     private void initialize(final CallbackContext callbackContext, final JSONArray args) {
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
-            PushService.setDefaultPushCallback(cordova.getActivity(), cordova.getActivity().getClass());
-            ParseInstallation.getCurrentInstallation().saveInBackground();
-            callbackContext.success();
+                // Required for older version of Parse Library
+                // PushService.setDefaultPushCallback(cordova.getActivity(), cordova.getActivity().getClass());
+                ParseInstallation.getCurrentInstallation().saveInBackground();
+                callbackContext.success();
             }
         });
     }
@@ -100,8 +102,11 @@ public class ParsePlugin extends CordovaPlugin {
     private void getSubscriptions(final CallbackContext callbackContext) {
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
-                 Set<String> subscriptions = PushService.getSubscriptions(cordova.getActivity());
-                 callbackContext.success(subscriptions.toString());
+                // For older Parse Library < 1.10
+                // Set<String> subscriptions = PushService.getSubscriptions(cordova.getActivity());
+                // For newer Parse Library
+                List<String> subscriptions = ParseInstallation.getCurrentInstallation().getList("channels");
+                callbackContext.success(subscriptions.toString());
             }
         });
     }
@@ -135,6 +140,5 @@ public class ParsePlugin extends CordovaPlugin {
             }
         });
     }
-    
-}
 
+}
