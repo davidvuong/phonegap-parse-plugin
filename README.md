@@ -21,76 +21,69 @@ Initial Setup
 
 In your Application Class -> ```onCreate()``` call ```ParsePlugin.initializeParseWithApplication(this);```. This will register the device with Parse, you should see this reflected in your Parse control panel.
 
-```
+```js
 parsePlugin.initialize(appId, clientKey, function() {
-
-	parsePlugin.subscribe('SampleChannel', function() {
-		
-		parsePlugin.getInstallationId(function(id) {
-		
-			/**
-			 * Now you can construct an object and save it to your own services, or Parse, and corrilate users to parse installations
-			 * 
-			 var install_data = {
-			  	installation_id: id,
-			  	channels: ['SampleChannel']
-			 }
-			 *
-			 */
-
-		}, function(e) {
-			alert('error');
-		});
-
-	}, function(e) {
-		alert('error');
-	});
-	
+    parsePlugin.subscribe('SampleChannel', function() {
+        parsePlugin.getInstallationId(function(id) {
+            /**
+             * Now you can construct an object and save it to your own services, or Parse, and corrilate users to parse installations
+             *
+             var install_data = {
+                  installation_id: id,
+                  channels: ['SampleChannel']
+             }
+             *
+             */
+        }, function(e) {
+            alert('error');
+        });
+    }, function(e) {
+        alert('error');
+    });
 }, function(e) {
-	alert('error');
+    alert('error');
 });
-
 ```
-
 
 Usage
 -----
-```
-	parsePlugin.initialize(appId, clientKey, function() {
-		alert('success');
-	}, function(e) {
-		alert('error');
-	});
-  
-	// Tested & Working
-	parsePlugin.getInstallationId(function(id) {
-		alert(id);
-	}, function(e) {
-		alert('error');
-	});
-	
-	parsePlugin.getSubscriptions(function(subscriptions) {
-		alert(subscriptions);
-	}, function(e) {
-		alert('error');
-	});
-	
-	// Tested & Working
-	parsePlugin.subscribe('SampleChannel', function() {
-		alert('OK');
-	}, function(e) {
-		alert('error');
-	});
-	
-	// Tested & Working
-	parsePlugin.unsubscribe('SampleChannel', function(msg) {
-		alert('OK');
-	}, function(e) {
-		alert('error');
-	});
 
+```js
+parsePlugin.initialize(appId, clientKey, function() {
+    alert('success');
+}, function(e) {
+    alert('error');
+});
+
+// Tested & Working
+parsePlugin.getInstallationId(function(id) {
+    alert(id);
+}, function(e) {
+    alert('error');
+});
+
+parsePlugin.getSubscriptions(function(subscriptions) {
+    alert(subscriptions);
+}, function(e) {
+    alert('error');
+});
+
+// Tested & Working
+parsePlugin.subscribe('SampleChannel', function() {
+    alert('OK');
+}, function(e) {
+    alert('error');
+});
+
+// Tested & Working
+parsePlugin.unsubscribe('SampleChannel', function(msg) {
+    alert('OK');
+}, function(e) {
+    alert('error');
+});
 ```
 
 Compatibility
 -------------
 Tested with Cordova >= 5.0.0
+
