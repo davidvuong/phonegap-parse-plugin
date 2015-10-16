@@ -11,6 +11,7 @@
     CDVPluginResult* pluginResult = nil;
     NSString *appId = [command.arguments objectAtIndex:0];
     NSString *clientKey = [command.arguments objectAtIndex:1];
+
     [Parse setApplicationId:appId clientKey:clientKey];
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -66,6 +67,7 @@
 
     CDVPluginResult* pluginResult = nil;
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+
     NSString *channel = [command.arguments objectAtIndex:0];
     [currentInstallation addUniqueObject:channel forKey:@"channels"];
     [currentInstallation saveInBackground];
@@ -92,12 +94,17 @@ void MethodSwizzle(Class c, SEL originalSelector) {
     NSString *selectorString = NSStringFromSelector(originalSelector);
     SEL newSelector = NSSelectorFromString([@"swizzled_" stringByAppendingString:selectorString]);
     SEL noopSelector = NSSelectorFromString([@"noop_" stringByAppendingString:selectorString]);
+
     Method originalMethod, newMethod, noop;
     originalMethod = class_getInstanceMethod(c, originalSelector);
     newMethod = class_getInstanceMethod(c, newSelector);
     noop = class_getInstanceMethod(c, noopSelector);
+
     if (class_addMethod(c, originalSelector, method_getImplementation(newMethod), method_getTypeEncoding(newMethod))) {
-        class_replaceMethod(c, newSelector, method_getImplementation(originalMethod) ?: method_getImplementation(noop), method_getTypeEncoding(originalMethod));
+        class_replaceMethod(c,
+                            newSelector,
+                            method_getImplementation(originalMethod) ?: method_getImplementation(noop),
+                            method_getTypeEncoding(originalMethod));
     } else {
         method_exchangeImplementations(originalMethod, newMethod);
     }
@@ -109,29 +116,50 @@ void MethodSwizzle(Class c, SEL originalSelector) {
     MethodSwizzle([self class], @selector(application:didReceiveRemoteNotification:));
 }
 
-- (void)noop_application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
+- (void)
+                                    noop_application:(UIApplication *)application
+    didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
 {
 }
 
-- (void)swizzled_application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
+- (void)
+                                swizzled_application:(UIApplication *)application
+    didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
 {
     // Call existing method
     [self swizzled_application:application didRegisterForRemoteNotificationsWithDeviceToken:newDeviceToken];
+
     // Store the deviceToken in the current installation and save it to Parse.
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:newDeviceToken];
+    currentInstallation.channels = @[ @"global" ];
     [currentInstallation saveInBackground];
 }
 
-- (void)noop_application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+- (void)
+                noop_application:(UIApplication *)application
+    didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
 }
 
-- (void)swizzled_application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+- (void)
+                        swizzled_application:(UIApplication *)
+    application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
-    // Call existing method
+    // Call existing method.
     [self swizzled_application:application didReceiveRemoteNotification:userInfo];
+
+    // Process the remote notification
     [PFPush handlePush:userInfo];
+
+    // Clear notification badge
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    [[UIApplication sharedApplication] cancelAllLocalNotifications];
+
+    // Let's invoke the pushCallback() method within Cordova with data from the userInfo boject
+    NSString *jsCallBack = [NSString stringWithFormat:@"pushCallback('%@', '%@');", userInfo[@"item1"], userInfo[@"item2"]];
+    [self.viewController.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
 }
 
 @end
+
