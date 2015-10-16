@@ -116,6 +116,14 @@ void MethodSwizzle(Class c, SEL originalSelector) {
     MethodSwizzle([self class], @selector(application:didReceiveRemoteNotification:));
 }
 
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    if (currentInstallation.badge != 0) {
+        currentInstallation.badge = 0;
+        [currentInstallation saveEventually];
+    }
+}
+
 - (void)
                                     noop_application:(UIApplication *)application
     didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
