@@ -1,23 +1,25 @@
-Cordova Parse.com Plugin
-=========================
+## Cordova Parse Push Plugin
 
-Cordova plugin for Parse.com PUSH service
+Cordova plugin for Parse.com PUSH service.
 
 This plugin exposes the four native Android API push services to JS:
 * <a href="https://www.parse.com/docs/android/api/com/parse/ParseInstallation.html#getInstallationId()">getInstallationId</a>
 * <a href="https://www.parse.com/docs/android/api/com/parse/PushService.html#getSubscriptions(android.content.Context)">getSubscriptions</a>
-* <a href="https://www.parse.com/docs/android/api/com/parse/ParsePush.html#subscribeInBackground(java.lang.String)">subscribe</a> - Modified for ```subscribeInBackground```
-* <a href="https://www.parse.com/docs/android/api/com/parse/ParsePush.html#unsubscribeInBackground(java.lang.String)">unsubscribe</a> - Modified for ```unsubscribeInBackground```
+* <a href="https://www.parse.com/docs/android/api/com/parse/ParsePush.html#subscribeInBackground(java.lang.String)">subscribe</a> - Modified for `subscribeInBackground`
+* <a href="https://www.parse.com/docs/android/api/com/parse/ParsePush.html#unsubscribeInBackground(java.lang.String)">unsubscribe</a> - Modified for `unsubscribeInBackground`
 
-Installation
-------------
+### Installation
 
 ```
-cordova plugin add https://github.com/jumpbytehq/phonegap-parse-plugin --variable APP_ID=YOUR_APP_ID --variable CLIENT_KEY=YOUR_CLIENT_KEY
+cordova plugin add https://github.com/davidvuong/phonegap-parse-plugin.git
 ```
+
+*Tested on iOS & forked repository had it tested on Android.*
 
 Initial Setup
 -------------
+
+After the plugin has been installed a few things happen:
 
 In your Application Class -> ```onCreate()``` call ```ParsePlugin.initializeParseWithApplication(this);```. This will register the device with Parse, you should see this reflected in your Parse control panel.
 
@@ -45,8 +47,7 @@ parsePlugin.initialize(appId, clientKey, function() {
 });
 ```
 
-Usage
------
+### Usage
 
 ```js
 parsePlugin.initialize(appId, clientKey, function() {
