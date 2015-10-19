@@ -23,6 +23,7 @@
         CDVPluginResult* pluginResult = nil;
         PFInstallation *currentInstallation = [PFInstallation currentInstallation];
         NSString *installationId = currentInstallation.installationId;
+
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:installationId];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
@@ -34,6 +35,7 @@
         CDVPluginResult* pluginResult = nil;
         PFInstallation *currentInstallation = [PFInstallation currentInstallation];
         NSString *objectId = currentInstallation.objectId;
+
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:objectId];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
@@ -48,22 +50,6 @@
 
 - (void)subscribe: (CDVInvokedUrlCommand *)command
 {
-    // Not sure if this is necessary
-    if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-        UIUserNotificationSettings *settings =
-        [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert |
-                                                     UIUserNotificationTypeBadge |
-                                                     UIUserNotificationTypeSound
-                                          categories:nil];
-        [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-        [[UIApplication sharedApplication] registerForRemoteNotifications];
-    } else {
-        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
-            UIRemoteNotificationTypeBadge |
-            UIRemoteNotificationTypeAlert |
-            UIRemoteNotificationTypeSound];
-    }
-
     CDVPluginResult* pluginResult = nil;
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
 
@@ -71,6 +57,7 @@
 
     [currentInstallation addUniqueObject:channel forKey:@"channels"];
     [currentInstallation saveInBackground];
+
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
@@ -80,8 +67,10 @@
     CDVPluginResult* pluginResult = nil;
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     NSString *channel = [command.arguments objectAtIndex:0];
+
     [currentInstallation removeObject:channel forKey:@"channels"];
     [currentInstallation saveInBackground];
+
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
