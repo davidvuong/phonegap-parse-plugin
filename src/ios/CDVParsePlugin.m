@@ -57,8 +57,7 @@
                                           categories:nil];
         [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
         [[UIApplication sharedApplication] registerForRemoteNotifications];
-    }
-    else {
+    } else {
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
             UIRemoteNotificationTypeBadge |
             UIRemoteNotificationTypeAlert |
@@ -116,7 +115,7 @@ void MethodSwizzle(Class c, SEL originalSelector) {
     MethodSwizzle([self class], @selector(application:didReceiveRemoteNotification:));
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application {
+- (void)applicationWillEnterForeground:(UIApplication *)application {
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     if (currentInstallation.badge != 0) {
         currentInstallation.badge = 0;
