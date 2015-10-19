@@ -68,6 +68,7 @@
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
 
     NSString *channel = [command.arguments objectAtIndex:0];
+
     [currentInstallation addUniqueObject:channel forKey:@"channels"];
     [currentInstallation saveInBackground];
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
@@ -139,7 +140,6 @@ void MethodSwizzle(Class c, SEL originalSelector) {
     // Store the deviceToken in the current installation and save it to Parse.
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:newDeviceToken];
-    currentInstallation.channels = @[ @"global" ];
     [currentInstallation saveInBackground];
 }
 
