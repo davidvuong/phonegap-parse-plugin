@@ -145,9 +145,6 @@ void MethodSwizzle(Class c, SEL originalSelector) {
     // Call existing method.
     [self swizzled_application:application didReceiveRemoteNotification:userInfo];
 
-    // Process the remote notification
-    [PFPush handlePush:userInfo];
-
     // Clear notification badge
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
